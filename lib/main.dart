@@ -87,6 +87,14 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  // 下载
+  void _download(int index) {
+    if (_mediaList.length <= index)
+      return;
+    var entity = _mediaList[index];
+
+  }
+
   // 帖子对应的媒体列表布局
   Widget _mediaListLayout() {
     return Expanded(
@@ -124,7 +132,13 @@ class _MainPageState extends State<MainPage> {
                       height: 100,
                       alignment: Alignment.bottomRight,
                       child: RaisedButton(
-                        onPressed: null,
+                        onPressed: entity.downloadStatus == InsMediaEntity.NO_DOWNLOAD ? () {
+                          _download(index);
+                        } : null,
+                        textColor: Colors.white,
+                        color: Colors.blue,
+                        disabledColor: Colors.grey,
+                        disabledTextColor: Colors.black87,
                         child: Text("下载"),
                       ),
                     ),
@@ -135,7 +149,7 @@ class _MainPageState extends State<MainPage> {
                 padding: EdgeInsets.all(4),
               ),
               Text(
-                "111111111_" + index.toString(),
+                entity.downloadStatus == InsMediaEntity.DOWNLOADED ? entity.downloadPath : "",
               ),
             ],
           ),

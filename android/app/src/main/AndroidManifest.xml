@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.josephuszhou.ins_download_flutter">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
@@ -9,7 +10,8 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="ins_download_flutter"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
