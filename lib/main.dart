@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:toast/toast.dart';
-
-import 'ins.dart';
-import 'entity/InsMediaEntity.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'entity/InsMediaEntity.dart';
+import 'util/InsUtil.dart';
+import 'util/ToastUtil.dart';
 
 void main() {
   runApp(MainApp());
@@ -63,7 +63,10 @@ class _MainPageState extends State<MainPage> {
   // 获取图片视频
   void _getInsData() {
     String text = _textFieldController.text;
-    if (text.isEmpty || !text.contains("instagram.com")) return;
+    if (text.isEmpty || !text.contains("instagram.com")) {
+      toast("链接不正确，请重新输入", context);
+      return;
+    }
     setState(() {
       _loading = true;
     });
@@ -76,23 +79,23 @@ class _MainPageState extends State<MainPage> {
           _mediaList = result.data;
         });
       } else {
-        Toast.show(result.message, context);
+        toast(result.message, context);
       }
     }, onError: (e) {
       setState(() {
         _loading = false;
       });
-      Toast.show(e.toString(), context);
+      toast(e.toString(), context);
       print(e);
     });
   }
 
   // 下载
   void _download(int index) {
-    if (_mediaList.length <= index)
-      return;
-    var entity = _mediaList[index];
-
+    if (_mediaList.length <= index) return;
+    setState(() {
+      _mediaList[index].downloadStatus = InsMediaEntity.DOWNLOADING;
+    });
   }
 
   // 帖子对应的媒体列表布局
@@ -132,13 +135,16 @@ class _MainPageState extends State<MainPage> {
                       height: 100,
                       alignment: Alignment.bottomRight,
                       child: RaisedButton(
-                        onPressed: entity.downloadStatus == InsMediaEntity.NO_DOWNLOAD ? () {
-                          _download(index);
-                        } : null,
+                        onPressed:
+                            entity.downloadStatus == InsMediaEntity.NO_DOWNLOAD
+                                ? () {
+                                    _download(index);
+                                  }
+                                : null,
                         textColor: Colors.white,
                         color: Colors.blue,
                         disabledColor: Colors.grey,
-                        disabledTextColor: Colors.black87,
+                        disabledTextColor: Colors.white,
                         child: Text("下载"),
                       ),
                     ),
@@ -149,7 +155,9 @@ class _MainPageState extends State<MainPage> {
                 padding: EdgeInsets.all(4),
               ),
               Text(
-                entity.downloadStatus == InsMediaEntity.DOWNLOADED ? entity.downloadPath : "",
+                entity.downloadStatus == InsMediaEntity.DOWNLOADED
+                    ? entity.downloadPath
+                    : "",
               ),
             ],
           ),

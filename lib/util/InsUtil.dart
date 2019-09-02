@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'entity/ResultEntity.dart';
-import 'entity/InsMediaEntity.dart';
+import '../entity/ResultEntity.dart';
+import '../entity/InsMediaEntity.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 
