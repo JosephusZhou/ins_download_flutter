@@ -7,6 +7,7 @@ import 'entity/InsMediaEntity.dart';
 import 'util/InsUtil.dart';
 import 'util/ToastUtil.dart';
 import 'behavior/NoRippleBehavior.dart';
+import 'util/PermissionUtil.dart';
 
 void main() {
   runApp(MainApp());
@@ -271,6 +272,14 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    checkPermission(context).then((result) {
+      if (result) {
+        toast("申请权限成功", context);
+      } else {
+        toast("申请权限失败", context);
+        SystemNavigator.pop();
+      }
+    });
     _textFieldController.text =
         "https://www.instagram.com/p/B0TLbTrlP1b/?igshid=1h9qggxiaxjz0";
     return Scaffold(
