@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'entity/InsMediaEntity.dart';
 import 'util/InsUtil.dart';
 import 'util/ToastUtil.dart';
+import 'behavior/NoRippleBehavior.dart';
 
 void main() {
   runApp(MainApp());
@@ -24,6 +25,12 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: NoRippleBehavior(),
+          child: child,
+        );
+      },
       title: title,
       theme: ThemeData(
         primarySwatch: Colors.blue,
