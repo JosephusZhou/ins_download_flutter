@@ -114,54 +114,68 @@ class _MainPageState extends State<MainPage> {
   // 列表单项布局
   Widget _mediaListItemLayout(int index) {
     var entity = _mediaList[index];
-    return Container(
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Image(
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                    image: NetworkImage(entity.thumbnailUrl),
-                    alignment: Alignment.topLeft,
-                  ),
-                  Expanded(
-                    child: Container(
+    return Card(
+      margin: EdgeInsets.only(top: 4, bottom: 4),
+      child: Stack(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Image.network(
+                      entity.thumbnailUrl,
+                      width: 100,
                       height: 100,
-                      alignment: Alignment.bottomRight,
-                      child: RaisedButton(
-                        onPressed:
-                            entity.downloadStatus == InsMediaEntity.NO_DOWNLOAD
-                                ? () {
-                                    _download(index);
-                                  }
-                                : null,
-                        textColor: Colors.white,
-                        color: Colors.blue,
-                        disabledColor: Colors.grey,
-                        disabledTextColor: Colors.white,
-                        child: Text("下载"),
+                      fit: BoxFit.cover,
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        alignment: Alignment.bottomRight,
+                        child: RaisedButton(
+                          onPressed: entity.downloadStatus ==
+                                  InsMediaEntity.NO_DOWNLOAD
+                              ? () {
+                                  _download(index);
+                                }
+                              : null,
+                          textColor: Colors.white,
+                          color: Colors.blue,
+                          disabledColor: Colors.grey,
+                          disabledTextColor: Colors.white,
+                          child: Text("下载"),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.all(4),
-              ),
-              Text(
-                entity.downloadStatus == InsMediaEntity.DOWNLOADED
-                    ? entity.downloadPath
-                    : "",
-              ),
-            ],
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.all(4),
+                ),
+                Text(
+                  entity.downloadStatus == InsMediaEntity.DOWNLOADED
+                      ? entity.downloadPath
+                      : "",
+                ),
+              ],
+            ),
           ),
-        ),
+          Offstage(
+            offstage: entity.downloadStatus != InsMediaEntity.DOWNLOADING,
+            child: Container(
+              height: 144,
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+              ),
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -230,28 +244,21 @@ class _MainPageState extends State<MainPage> {
   Widget _loadingLayout() {
     return Offstage(
       offstage: !_loading,
-      child: ConstrainedBox(
-        constraints: BoxConstraints.expand(),
-        child: Container(
-          alignment: Alignment.center,
-          color: Colors.black26,
-          child: CircularProgressIndicator(),
-        ),
+      child: Container(
+        alignment: Alignment.center,
+        color: Colors.black26,
+        child: CircularProgressIndicator(),
       ),
     );
   }
 
   // 整体布局
   Widget _bodyLayout() {
-    return ConstrainedBox(
-      constraints: BoxConstraints.expand(),
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          _defaultLayout(),
-          _loadingLayout(),
-        ],
-      ),
+    return Stack(
+      children: <Widget>[
+        _defaultLayout(),
+        _loadingLayout(),
+      ],
     );
   }
 
