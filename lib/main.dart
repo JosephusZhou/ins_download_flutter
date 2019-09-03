@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'behavior/NoRippleBehavior.dart';
 import 'entity/InsMediaEntity.dart';
 import 'util/InsUtil.dart';
-import 'util/ToastUtil.dart';
-import 'behavior/NoRippleBehavior.dart';
 import 'util/PermissionUtil.dart';
+import 'util/ToastUtil.dart';
 
 void main() {
   runApp(MainApp());
@@ -55,6 +55,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final _textFieldController = TextEditingController();
   bool _loading = false;
+  bool _init = false;
   List<InsMediaEntity> _mediaList = List<InsMediaEntity>();
 
   @override
@@ -272,16 +273,19 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    checkPermission(context).then((result) {
-      if (result) {
-        toast("申请权限成功", context);
-      } else {
-        toast("申请权限失败", context);
-        SystemNavigator.pop();
-      }
-    });
-    _textFieldController.text =
-        "https://www.instagram.com/p/B0TLbTrlP1b/?igshid=1h9qggxiaxjz0";
+    // 初始化一些工作
+    if (!_init) {
+      _init = true;
+      checkPermission(context).then((result) {
+        if (result == PERMISSION_GRANTED) {
+          toast("申请权限成功", context);
+        } else if (result == PERMISSION_DENIED) {
+          SystemNavigator.pop();
+        }
+      });
+      _textFieldController.text =
+      "https://www.instagram.com/p/B0TLbTrlP1b/?igshid=1h9qggxiaxjz0";
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),

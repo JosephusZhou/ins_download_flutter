@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-Future<bool> checkPermission(BuildContext context) async {
+const int PERMISSION_DENIED = 0;
+const int PERMISSION_GRANTED = 1;
+const int PERMISSION_EXIST = 2;
+
+Future<int> checkPermission(BuildContext context) async {
   if (Theme.of(context).platform == TargetPlatform.android) {
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
@@ -10,13 +15,13 @@ Future<bool> checkPermission(BuildContext context) async {
           await PermissionHandler()
               .requestPermissions([PermissionGroup.storage]);
       if (permissions[PermissionGroup.storage] == PermissionStatus.granted) {
-        return true;
+        return PERMISSION_GRANTED;
+      } else {
+        return PERMISSION_DENIED;
       }
     } else {
-      return true;
+      return PERMISSION_EXIST;
     }
-  } else {
-    return true;
   }
-  return false;
+  return PERMISSION_EXIST;
 }
