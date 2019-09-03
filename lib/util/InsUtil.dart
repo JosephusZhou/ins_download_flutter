@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart';
+import 'package:image_saver/image_saver.dart';
 import '../entity/ResultEntity.dart';
 import '../entity/InsMediaEntity.dart';
 import 'package:html/parser.dart' show parse;
@@ -76,4 +78,11 @@ InsMediaEntity parseSingleMedia(List<dynamic> resources) {
     }
   }
   return entity;
+}
+
+// 保存图片
+Future<File> savedImage(String url) async {
+  var response = await get(url);
+  File savedFile = await ImageSaver.toFile(fileData: response.bodyBytes);
+  return savedFile;
 }

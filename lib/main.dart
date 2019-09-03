@@ -105,6 +105,18 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       _mediaList[index].downloadStatus = InsMediaEntity.DOWNLOADING;
     });
+    savedImage(_mediaList[index].imageUrl).then((file) {
+      setState(() {
+        _mediaList[index].downloadStatus = InsMediaEntity.DOWNLOADED;
+        _mediaList[index].downloadPath = file.path;
+      });
+    }, onError: (e) {
+      setState(() {
+        _mediaList[index].downloadStatus = InsMediaEntity.NO_DOWNLOAD;
+      });
+      print(e.toString());
+      toast(e.toString(), context);
+    });
   }
 
   // 帖子对应的媒体列表布局
