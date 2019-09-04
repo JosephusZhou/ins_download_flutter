@@ -2,8 +2,6 @@
 
 Download images and videos from Instagram.
 
-## Getting Started
-
 项目 InsDownload 的 Flutter 版本。
 
 使用 Flutter 开发，Android、iOS 均可使用。
