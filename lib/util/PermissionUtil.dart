@@ -22,6 +22,26 @@ Future<int> checkPermission(BuildContext context) async {
     } else {
       return PERMISSION_EXIST;
     }
+  } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.photos);
+    if (permission != PermissionStatus.granted) {
+      Map<PermissionGroup, PermissionStatus> permissions =
+      await PermissionHandler()
+          .requestPermissions([PermissionGroup.photos]);
+      if (permissions[PermissionGroup.photos] == PermissionStatus.granted) {
+        return PERMISSION_GRANTED;
+      } else {
+        return PERMISSION_DENIED;
+      }
+    } else {
+      return PERMISSION_EXIST;
+    }
   }
   return PERMISSION_EXIST;
+}
+
+Future<bool> openSettings() async {
+  bool isOpened = await PermissionHandler().openAppSettings();
+  return isOpened;
 }

@@ -292,7 +292,8 @@ class _MainPageState extends State<MainPage> {
         if (result == PERMISSION_GRANTED) {
           toast("申请权限成功", context);
         } else if (result == PERMISSION_DENIED) {
-          SystemNavigator.pop();
+          toast("申请权限失败，程序可能无法正常运行，请前往设置中开启权限", context, duration: 1);
+          //openSettings();
         }
       });
       _textFieldController.text =
