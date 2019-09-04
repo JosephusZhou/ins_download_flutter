@@ -18,12 +18,16 @@ if (flutterVersionCode == null) {
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '0.0.1'
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+def keyPropsFile = file("../keystore.properties")
+Properties keyProps = new Properties()
+keyProps.load(new FileInputStream(keyPropsFile))
 
 android {
     compileSdkVersion 28
@@ -44,15 +48,50 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+//        setProperty("archivesBaseName", "InsFlutter-" + flutterVersionName)
+    }
+
+    signingConfigs {
+        insdownload {
+            storeFile file(keyProps['STORE_FILE'].toString())
+            storePassword keyProps['STORE_PASSWORD'].toString()
+            keyAlias keyProps['kEY_ALIAS'].toString()
+            keyPassword keyProps['KEY_PASSWORD'].toString()
+        }
     }
 
     buildTypes {
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            signingConfig signingConfigs.insdownload
+            debuggable true
+            zipAlignEnabled false
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            // signingConfig signingConfigs.debug
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            signingConfig signingConfigs.insdownload
+            debuggable false
+            zipAlignEnabled true
+            minifyEnabled true   //混淆
+            shrinkResources true //移除无用的resource文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+//    Flutter 运行时会会查找 Apk 文件，名字硬编码，不好解决
+//    applicationVariants.all { variant ->
+//        variant.outputs.all {
+//            def apkName = 'InsFlutter-' + flutterVersionName
+//            outputFileName = apkName + '.apk'
+//        }
+//    }
 }
 
 flutter {
