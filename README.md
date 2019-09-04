@@ -42,6 +42,11 @@ stormzhang~~)，动不动就是谷歌出的就是好东西，一会吹爆 Kotlin
 - 通过帖子链接获取帖子的图片
 - 下载帖子图片
 
+### To-Do List
+
+* 自动获取剪贴板链接
+* 下载视频
+
 ### Build Info
 
 - 在`android`目录下创建`keystore`目录，存放签名密钥
