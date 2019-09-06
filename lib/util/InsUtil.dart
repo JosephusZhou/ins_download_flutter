@@ -34,7 +34,7 @@ Future<List<InsMediaEntity>> parseInsPost(String html) async {
       var jsonStr = element.text.substring(21, element.text.length - 1);
       Map<String, dynamic> map = json.decode(jsonStr);
       Map<String, dynamic> mediaMap =
-          map['entry_data']['PostPage'][0]['graphql']['shortcode_media'];
+      map['entry_data']['PostPage'][0]['graphql']['shortcode_media'];
       List<dynamic> displayResources = mediaMap['display_resources'];
       var displayMediaEntity = parseSingleMedia(displayResources);
       // 视频
@@ -45,15 +45,18 @@ Future<List<InsMediaEntity>> parseInsPost(String html) async {
         insMediaEntity.thumbnailUrl = displayMediaEntity.thumbnailUrl;
         list.add(insMediaEntity);
       }
-      // 多张图片
-      if (mediaMap.containsKey('edge_sidecar_to_children')) {
-        for (var edgeItem in mediaMap['edge_sidecar_to_children']['edges']) {
-          list.add(parseSingleMedia(edgeItem['node']['display_resources']));
-        }
-      }
-      // 单张图片
+      // 图片
       else {
-        list.add(displayMediaEntity);
+        // 多张图片
+        if (mediaMap.containsKey('edge_sidecar_to_children')) {
+          for (var edgeItem in mediaMap['edge_sidecar_to_children']['edges']) {
+            list.add(parseSingleMedia(edgeItem['node']['display_resources']));
+          }
+        }
+        // 单张图片
+        else {
+          list.add(displayMediaEntity);
+        }
       }
       break;
     }
