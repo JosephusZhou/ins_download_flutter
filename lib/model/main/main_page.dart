@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ins_download_flutter/entity/InsMediaEntity.dart';
 import 'package:ins_download_flutter/model/about/about_page.dart';
 import 'package:ins_download_flutter/model/help/help_page.dart';
@@ -17,15 +18,22 @@ class MainPage extends StatefulWidget {
 }
 
 // 主页逻辑
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   final _textFieldController = TextEditingController();
   bool _loading = false;
   bool _init = false;
   List<InsMediaEntity> _mediaList = List<InsMediaEntity>();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void dispose() {
     _textFieldController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -261,8 +269,7 @@ class _MainPageState extends State<MainPage> {
           //openSettings();
         }
       });
-      _textFieldController.text =
-      "https://www.instagram.com/p/B0TLbTrlP1b/?igshid=1h9qggxiaxjz0";
+      _getClipboardData();
     }
     return Scaffold(
       appBar: AppBar(
@@ -300,5 +307,21 @@ class _MainPageState extends State<MainPage> {
       ),
       body: _bodyLayout(),
     );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      _getClipboardData();
+    }
+  }
+
+  void _getClipboardData() {
+    Clipboard.getData("text/plain").then((data) {
+      if (data != null && data.text.contains("instagram.com")) {
+        _textFieldController.text = data.text;
+      }
+    });
   }
 }
