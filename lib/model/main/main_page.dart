@@ -7,6 +7,8 @@ import 'package:ins_download_flutter/util/InsUtil.dart';
 import 'package:ins_download_flutter/util/PermissionUtil.dart';
 import 'package:ins_download_flutter/util/ToastUtil.dart';
 
+import '../../constants.dart';
+
 // 主页
 class MainPage extends StatefulWidget {
   MainPage({Key key, this.title}) : super(key: key);
@@ -137,7 +139,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                           }
                               : null,
                           textColor: Colors.white,
-                          color: Colors.teal,
+                          color: Constants.pColor,
                           disabledColor: Colors.grey,
                           disabledTextColor: Colors.white,
                           child: Text("下载"),
@@ -208,7 +210,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                   child: RaisedButton(
                     child: Text("获取图片视频"),
                     textColor: Colors.white,
-                    color: Colors.teal,
+                    color: Constants.pColor,
                     onPressed: _getInsData,
                   ),
                 ),
@@ -220,7 +222,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                   child: RaisedButton(
                     child: Text("重置输入"),
                     textColor: Colors.white,
-                    color: Colors.teal,
+                    color: Constants.pColor,
                     onPressed: _resetTextField,
                   ),
                 ),

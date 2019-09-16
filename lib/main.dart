@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ins_download_flutter/constants.dart';
 
 import 'behavior/NoRippleBehavior.dart';
 import 'model/main/main_page.dart';
@@ -31,7 +32,7 @@ class MainApp extends StatelessWidget {
       },
       title: title,
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Constants.pColor,
       ),
       home: MainPage(title: title),
     );
