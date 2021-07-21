@@ -13,7 +13,7 @@ import 'package:html/dom.dart';
 Future<ResultEntity<List<InsMediaEntity>>> requestData(String url) async {
   var result = ResultEntity<List<InsMediaEntity>>();
   result.code = -1;
-  var response = await get(url);
+  var response = await get(Uri.parse(url));
   if (response.statusCode == 200) {
     result.code = 1;
     result.data = await parseInsPost(response.body);
@@ -26,7 +26,7 @@ Future<ResultEntity<List<InsMediaEntity>>> requestData(String url) async {
 
 // 解析 Ins 帖子，解析耗时，封装成异步
 Future<List<InsMediaEntity>> parseInsPost(String html) async {
-  var list = List<InsMediaEntity>();
+  List<InsMediaEntity> list = [];
   Document doc = parse(html);
   var items = doc.querySelectorAll('script[type="text/javascript"]');
   for (var element in items) {
@@ -85,7 +85,7 @@ InsMediaEntity parseSingleMedia(List<dynamic> resources) {
 
 // 保存图片
 Future<File> savedImage(String url) async {
-  var response = await get(url);
+  var response = await get(Uri.parse(url));
   File savedFile = await ImageSaver.toFile(fileData: response.bodyBytes);
   return savedFile;
 }

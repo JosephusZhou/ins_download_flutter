@@ -8,13 +8,11 @@ const int PERMISSION_EXIST = 2;
 
 Future<int> checkPermission(BuildContext context) async {
   if (Theme.of(context).platform == TargetPlatform.android) {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.storage);
-    if (permission != PermissionStatus.granted) {
-      Map<PermissionGroup, PermissionStatus> permissions =
-          await PermissionHandler()
-              .requestPermissions([PermissionGroup.storage]);
-      if (permissions[PermissionGroup.storage] == PermissionStatus.granted) {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      Map<Permission, PermissionStatus> statuses =
+          await [Permission.storage].request();
+      if (statuses[Permission.storage] == PermissionStatus.granted) {
         return PERMISSION_GRANTED;
       } else {
         return PERMISSION_DENIED;
@@ -23,13 +21,11 @@ Future<int> checkPermission(BuildContext context) async {
       return PERMISSION_EXIST;
     }
   } else if (Theme.of(context).platform == TargetPlatform.iOS) {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.photos);
-    if (permission != PermissionStatus.granted) {
-      Map<PermissionGroup, PermissionStatus> permissions =
-      await PermissionHandler()
-          .requestPermissions([PermissionGroup.photos]);
-      if (permissions[PermissionGroup.photos] == PermissionStatus.granted) {
+    var status = await Permission.photos.status;
+    if (!status.isGranted) {
+      Map<Permission, PermissionStatus> statuses =
+      await [Permission.photos].request();
+      if (statuses[Permission.photos] == PermissionStatus.granted) {
         return PERMISSION_GRANTED;
       } else {
         return PERMISSION_DENIED;
@@ -42,6 +38,6 @@ Future<int> checkPermission(BuildContext context) async {
 }
 
 Future<bool> openSettings() async {
-  bool isOpened = await PermissionHandler().openAppSettings();
+  bool isOpened = await openAppSettings();
   return isOpened;
 }

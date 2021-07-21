@@ -11,7 +11,7 @@ import '../../constants.dart';
 
 // 主页
 class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
+  MainPage({Key key, @required this.title}) : super(key: key);
 
   final String title;
 
@@ -24,18 +24,18 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   final _textFieldController = TextEditingController();
   bool _loading = false;
   bool _init = false;
-  List<InsMediaEntity> _mediaList = List<InsMediaEntity>();
+  var _mediaList = <InsMediaEntity>[];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
   }
 
   @override
   void dispose() {
     _textFieldController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 
@@ -321,7 +321,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   void _getClipboardData() {
     Clipboard.getData("text/plain").then((data) {
-      if (data != null && data.text.contains("instagram.com")) {
+      if (data != null && data.text != null && data.text.contains("instagram.com")) {
         _textFieldController.text = data.text;
       }
     });
